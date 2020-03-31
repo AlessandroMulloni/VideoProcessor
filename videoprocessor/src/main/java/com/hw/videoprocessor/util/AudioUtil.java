@@ -14,7 +14,6 @@ import android.util.Pair;
 import com.hw.videoprocessor.VideoProcessor;
 import com.hw.videoprocessor.VideoUtil;
 import com.hw.videoprocessor.jssrc.SSRC;
-import net.surina.soundtouch.SoundTouch;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -658,7 +657,7 @@ public class AudioUtil {
      */
     public static void writeAudioTrackDecode(Context context, MediaExtractor extractor, MediaMuxer mediaMuxer, int muxerAudioTrackIndex,
                                              Integer startTimeUs, Integer endTimeUs,
-                                             @NonNull Float speed, @Nullable VideoProgressListener listener) throws Exception {
+                                             @Nullable VideoProgressListener listener) throws Exception {
         int audioTrack = VideoUtil.selectTrack(extractor, true);
         extractor.selectTrack(audioTrack);
         if (startTimeUs == null) {
@@ -761,16 +760,7 @@ public class AudioUtil {
         //开始处理pcm
         CL.i("start process pcm speed");
         File outFile = new File(context.getCacheDir(), pcmFile.getName() + ".outpcm");
-        SoundTouch st = new SoundTouch();
-        st.setTempo(speed);
 
-        int res = st.processFile(wavFile.getAbsolutePath(), outFile.getAbsolutePath());
-        if (res < 0) {
-            pcmFile.delete();
-            wavFile.delete();
-            outFile.delete();
-            return;
-        }
         //重新将速率变化过后的pcm写入
         MediaExtractor pcmExtrator = new MediaExtractor();
         pcmExtrator.setDataSource(outFile.getAbsolutePath());

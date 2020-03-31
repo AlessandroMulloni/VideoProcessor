@@ -23,7 +23,6 @@ public class AudioProcessThread extends Thread implements VideoProgressListener 
     private String mVidepPath;
     private Integer mStartTimeMs;
     private Integer mEndTimeMs;
-    private Float mSpeed;
     private Context mContext;
     private Exception mException;
     private MediaMuxer mMuxer;
@@ -42,7 +41,6 @@ public class AudioProcessThread extends Thread implements VideoProgressListener 
         mVidepPath = videoPath;
         mStartTimeMs = startTimeMs;
         mEndTimeMs = endTimeMs;
-        mSpeed = speed;
         mMuxer = muxer;
         mContext = context;
         mMuxerAudioTrackIndex = muxerAudioTrackIndex;
@@ -79,9 +77,8 @@ public class AudioProcessThread extends Thread implements VideoProgressListener 
             if (!await) {
                 throw new TimeoutException("wait muxerStartLatch timeout!");
             }
-            if (mSpeed != null || !inputMimeType.equals(outputMimeType)) {
-                AudioUtil.writeAudioTrackDecode(mContext, mExtractor, mMuxer, mMuxerAudioTrackIndex, startTimeUs, endTimeUs,
-                        mSpeed==null?1f:mSpeed, this);
+            if (!inputMimeType.equals(outputMimeType)) {
+                AudioUtil.writeAudioTrackDecode(mContext, mExtractor, mMuxer, mMuxerAudioTrackIndex, startTimeUs, endTimeUs, this);
             } else {
                 AudioUtil.writeAudioTrack(mExtractor, mMuxer, mMuxerAudioTrackIndex, startTimeUs, endTimeUs, this);
             }
